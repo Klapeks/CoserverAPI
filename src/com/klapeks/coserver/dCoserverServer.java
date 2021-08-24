@@ -2,6 +2,7 @@ package com.klapeks.coserver;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.KeyPair;
@@ -9,9 +10,10 @@ import java.security.PublicKey;
 
 public class dCoserverServer {
 	
-	ServerSocket serverSocket;
+	public ServerSocket serverSocket;
 	private final int port;
 	private KeyPair keyPair;
+	boolean disabled = false;
 	public dCoserverServer(int port) {
 		this.port = port;
 		keyPair = dRSA.generateKeyPair(aConfig.rsaKeySize);
@@ -21,12 +23,13 @@ public class dCoserverServer {
 				try {
 					serverSocket = new ServerSocket(dCoserverServer.this.port);
 					onEnable();
-					while (true) {
+					while (!disabled) {
 						try {
 							Socket s = serverSocket.accept();
 							new Thread(new SocketProcessor(dCoserverServer.this, s)).start();
 //							new SocketProcessor(s).run();
 						} catch(Throwable th) {
+							if (serverSocket.isClosed() && disabled) break;
 							th.printStackTrace();
 						}
 					}
@@ -36,8 +39,19 @@ public class dCoserverServer {
 			}
 		}.start();
 	}
-
+	public void shutdown() {
+		try {
+			disabled = true;
+			serverSocket.close();
+		} catch (Throwable throwable) {
+			throwable.printStackTrace();
+		}
+	}
 	public void onEnable() {dFunctions.log("Coserver was started with port " + dCoserverServer.this.port);}
+	
+	public String handle(Socket socket, String request) {return handle(request);}
+	public String securityHandle(Socket socket, String request) {return securityHandle(request);}
+	
 	public String handle(String request) {return null;}
 	public String securityHandle(String request) {return null;}
 	
@@ -49,13 +63,14 @@ public class dCoserverServer {
 			this.s = s;
 			this.hs = hs;
 		}
-		private String handleRequest(String request) {
+		private String handleRequest(Socket s, String request) {
 			if (request.startsWith("enc/") || request.contains("/dec/")) {
 				request = request.replaceFirst("enc/", "");
 				PublicKey pk = dRSA.toPublicKey(request.split("/dec/")[0]);
 				request = request.substring(request.split("/dec/")[0].length()+"/dec/".length());
 				request = dRSA.rsaDecrypt(request, hs.keyPair.getPrivate());
-				return dRSA.rsaEncrypt(hs.securityHandle(request), pk);
+				
+				return dRSA.rsaEncrypt(hs.securityHandle(s, request), pk);
 			}
 			
 			else if (request.startsWith(aConfig.securityKey+dCoserver.securitySplitor)) {
@@ -64,7 +79,8 @@ public class dCoserverServer {
 					return dRSA.fromKey(hs.keyPair.getPublic());
 				}
 			}
-			return hs.handle(request);
+			
+			return hs.handle(s, request);
 		}
 		@Override
 		public void run() {
@@ -78,7 +94,7 @@ public class dCoserverServer {
 					request = request.substring("[Large]".length());
 					isLarge = true;
 				}
-				String response = handleRequest(request);
+				String response = handleRequest(s, request);
 				if (response == null) response = "404error";
 				if (response.equals("someerror")) response = "Errors 400/401/403/405/417/501/503 (go away lmao)";
 				dout.writeUTF(response);
@@ -93,7 +109,7 @@ public class dCoserverServer {
 							dout.flush();
 							break;
 						}
-						response = handleRequest(request);
+						response = handleRequest(s, request);
 						if (response == null) response = "404error";
 						if (response.equals("someerror")) response = "Errors 400/401/403/405/417/501/503 (go away lmao)";
 						dout.writeUTF(response);

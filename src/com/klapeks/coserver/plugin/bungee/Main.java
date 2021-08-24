@@ -38,4 +38,9 @@ public class Main extends Plugin {
 	public void onEnable() {
 		BungeeCoserv.__init__();
 	}
+	
+	@Override
+	public void onDisable() {
+		BungeeCoserv.server.shutdown();
+	}
 }
