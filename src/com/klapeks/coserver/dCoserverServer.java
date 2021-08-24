@@ -116,7 +116,7 @@ public class dCoserverServer {
 						dout.flush();
 					}
 				}
-				
+				dout.close();
 				din.close();
 				s.close();
 			} catch (Throwable e) {
