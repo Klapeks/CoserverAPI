@@ -10,8 +10,8 @@ import java.security.PublicKey;
 
 public class dCoserverServer {
 	
-	public ServerSocket serverSocket;
-	private final int port;
+	protected ServerSocket serverSocket;
+	public final int port;
 	private KeyPair keyPair;
 	boolean disabled = false;
 	public dCoserverServer(int port) {
@@ -49,11 +49,19 @@ public class dCoserverServer {
 	}
 	public void onEnable() {dFunctions.log("Coserver was started with port " + dCoserverServer.this.port);}
 	
-	public String handle(Socket socket, String request) {return handle(request);}
-	public String securityHandle(Socket socket, String request) {return securityHandle(request);}
+	public String handle(Socket socket, String request) {
+		return handle(request);
+	}
+	public String securityHandle(Socket socket, String request) {
+		return securityHandle(request);
+	}
 	
-	public String handle(String request) {return null;}
-	public String securityHandle(String request) {return null;}
+	public String handle(String request) {
+		return "null";
+	}
+	public String securityHandle(String request) {
+		return "null";
+	}
 	
 //	private static Map<String, PublicKey> ip$password = new HashMap<>();
 	private static class SocketProcessor implements Runnable {

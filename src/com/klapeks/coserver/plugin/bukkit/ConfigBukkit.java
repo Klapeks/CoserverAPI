@@ -36,7 +36,7 @@ public class ConfigBukkit {
 			
 			aConfig.bukkit.ip = g("bungee.ip", "0.0.0.0");
 			aConfig.bukkit.port = g("bungee.port", 25565-3000);
-			aConfig.useSecurity = g("useSecurity", false);
+			aConfig.useSecurity = g("useSecurity", true);
 			aConfig.rsaKeySize = g("rsaKeySize", 1024, "RSA key size");
 			aConfig.securityKey = g("securityKey", dRSA.generateSecretKey(10), "Security key to get a RSA public key from bungeecord", "(Needs to equals with bungeecord's config file)");
 			aConfig.useDebugMsg = g("useDebugMsg", false, "Is debug messages will shows in console");

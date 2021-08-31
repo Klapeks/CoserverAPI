@@ -46,9 +46,8 @@ public class BungeeCoserv {
 	}
 	
 	static dCoserverServer server;
-	static void __init__() {
+	public static void __init__() {
 		server = new dCoserverServer(aConfig.bungee.port) {
-			
 			@Override
 			public String handle(Socket socket, String request) {
 				String cmd = request.split(" ")[0];
@@ -65,7 +64,6 @@ public class BungeeCoserv {
 				}
 				return super.securityHandle(socket, request);
 			}
-			
 			@Override
 			public String handle(String request) {
 				String cmd = request.split(" ")[0];
@@ -82,7 +80,6 @@ public class BungeeCoserv {
 				}
 				return super.securityHandle(request);
 			}
-			
 			
 			@Override
 			public void onEnable() {

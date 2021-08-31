@@ -1,5 +1,6 @@
 package com.klapeks.coserver;
 
+import java.util.HashMap;
 import java.util.Random;
 
 public class dFunctions {
@@ -72,5 +73,29 @@ public class dFunctions {
 			if (filter.contains(s)) integer=integer+s;
 		}
 		return integer;
+	}
+	
+	
+	
+	/**Convert <b>"key:value$$k2:v2$$k3:val3"</b> with sep <b>"$$"</b> to <b>HashMap</b>*/
+	public static HashMap<String, String> string_HashMap(String str, String separator) {
+		HashMap<String, String> hm = new HashMap<>();
+		for (String s : str.split(separator)) {
+			String key = s.split(":")[0];
+			s = s.replaceFirst(key+":", "");
+			if (s.startsWith(" ")) s = s.replaceFirst(" ", "");
+			hm.put(key, s);
+		}
+		return hm;
+	}
+	
+	/**Convert <b>HashMap</b> with sep <b>"$$"</b> to <b>"key:value$$k2:v2$$k3:val3"</b>*/
+	public static String hashMap_String(HashMap<String, String> hm, String separator) {
+		String s = "";
+		for (String key : hm.keySet()) {
+			s = s + separator + key + ":" + hm.get(key);
+		}
+		if (s.startsWith(separator)) s = s.replaceFirst(separator, "");
+		return s;
 	}
 }
