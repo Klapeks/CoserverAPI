@@ -105,7 +105,11 @@ public class dCoserver {
 			keyPair = dRSA.generateKeyPair(aConfig.rsaKeySize);
 		}
 		if (!ip$password.containsKey(ip+"_"+port)) {
-			ip$password.put(ip+"_"+port, dRSA.toPublicKey(send(ip, port, aConfig.securityKey + securitySplitor + "givemepswpls", isLarge))); 
+			String s = send(ip, port, aConfig.securityKey + securitySplitor + "givemepswpls", isLarge);
+			if (s==null || s.equals("null") || s.equals("Errors 400/401/403/405/417/501/503 (go away lmao)")) {
+				throw new RuntimeException("Security key '" + aConfig.securityKey + "' is incorrect.");
+			}
+			ip$password.put(ip+"_"+port, dRSA.toPublicKey(s)); 
 		}
 		String r = send(ip, port, "enc/"+dRSA.fromKey(keyPair.getPublic())+"/dec/"+dRSA.rsaEncrypt(cmd, ip$password.get(ip+"_"+port)), isLarge);
 		if (r!=null && r.equals("Errors 400/401/403/405/417/501/503 (go away lmao)")) {

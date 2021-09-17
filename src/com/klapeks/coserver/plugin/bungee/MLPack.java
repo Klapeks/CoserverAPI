@@ -1,6 +1,7 @@
 package com.klapeks.coserver.plugin.bungee;
 
 import com.klapeks.coserver.IMLPack;
+import com.klapeks.coserver.aConfig;
 import com.klapeks.coserver.dFunctions;
 
 import net.md_5.bungee.api.ProxyServer;
@@ -33,12 +34,12 @@ public class MLPack implements IMLPack<Plugin> {
 	
 	public void enable(Plugin bungee) {
 		dFunctions.log("§aCoserverAPI is enabling");
-		BungeeCoserv.__init__();
+		SuperCoServer.BungeeCoserv = new SuperCoServer(aConfig.bungee.port);
 	}
 
 	public void disable(Plugin bungee) {
 		dFunctions.log("§cCoserverAPI is disabling");
-		BungeeCoserv.server.shutdown();
+		SuperCoServer.BungeeCoserv.shutdown();
 	}
 	
 }
