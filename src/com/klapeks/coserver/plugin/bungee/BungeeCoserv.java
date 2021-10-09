@@ -10,40 +10,38 @@ import com.klapeks.coserver.aConfig;
 public class BungeeCoserv {
 
 	
-	static SuperCoServer coserver;
 	public static void __init__() {
 		if (SuperCoServer.BungeeCoserv==null) {
 			SuperCoServer.BungeeCoserv = new SuperCoServer(aConfig.bungee.port);
 		}
-		coserver = SuperCoServer.BungeeCoserv;
 	}
 	/**
 	 * @param command
 	 * @param func - request -> {return "response";}
 	 */
 	public static void addHandler(String command, Function<String, String> func) {
-		coserver.addHandler(command, func);
+		SuperCoServer.BungeeCoserv.addHandler(command, func);
 	}
 	/**
 	 * @param command
 	 * @param func - request -> {return "response";}
 	 */
 	public static void addSecurityHandler(String command, Function<String, String> func) {
-		coserver.addSecurityHandler(command, func);
+		SuperCoServer.BungeeCoserv.addSecurityHandler(command, func);
 	}
 	/**
 	 * @param command
 	 * @param func - request -> {return "response";}
 	 */
 	public static void addSocketHandler(String command, BiFunction<Socket, String, String> func) {
-		coserver.addSocketHandler(command, func);
+		SuperCoServer.BungeeCoserv.addSocketHandler(command, func);
 	}
 	/**
 	 * @param command
 	 * @param func - request -> {return "response";}
 	 */
 	public static void addSocketSecurityHandler(String command, BiFunction<Socket, String, String> func) {
-		coserver.addSocketSecurityHandler(command, func);
+		SuperCoServer.BungeeCoserv.addSocketSecurityHandler(command, func);
 	}
 	
 }

@@ -29,12 +29,12 @@ public class MLPack implements IMLPack<Plugin> {
 	public void load(Plugin bungee) {
 		dFunctions.log("§3CoserverAPI is loading");
 		ConfigBungee.__init();
+		SuperCoServer.BungeeCoserv = new SuperCoServer(aConfig.bungee.port);
 		dFunctions.log("§aBungee was loaded.");
 	}
 	
 	public void enable(Plugin bungee) {
 		dFunctions.log("§aCoserverAPI is enabling");
-		SuperCoServer.BungeeCoserv = new SuperCoServer(aConfig.bungee.port);
 	}
 
 	public void disable(Plugin bungee) {

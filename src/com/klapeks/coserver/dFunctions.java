@@ -1,6 +1,11 @@
 package com.klapeks.coserver;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 
 public class dFunctions {
@@ -66,6 +71,17 @@ public class dFunctions {
 		if (ss.equals("")) return 0;
 		try {return Integer.parseInt(ss);} catch(Throwable e) {return 0;}
 	}
+	public static long toLong(Object obj) {
+		if (obj==null) return 0;
+		if (obj instanceof Long) {
+			return (Long) obj;
+		}
+		String ss = obj+"";
+		try {return Long.parseLong(ss);} catch(Throwable e) {};
+		ss = _filter_(ss, "-1234567890");
+		if (ss.equals("")) return 0;
+		try {return Long.parseLong(ss);} catch(Throwable e) {return 0;}
+	}
 	
 	private static String _filter_(String string, String filter) {
 		String integer = "";
@@ -97,5 +113,29 @@ public class dFunctions {
 		}
 		if (s.startsWith(separator)) s = s.replaceFirst(separator, "");
 		return s;
+	}
+
+	public static <K extends Comparable<? super K>, V> Map<K, V> sortByKey(Map<K, V> map) {
+		if (map==null) return null;
+        List<Entry<K, V>> list = new ArrayList<>(map.entrySet());
+        list.sort(Entry.comparingByKey());
+
+        Map<K, V> result = new LinkedHashMap<>();
+        for (Entry<K, V> entry : list) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+
+        return result;
+	}
+	public static <K, V extends Comparable<? super V>> Map<K, V> sortByValue(Map<K, V> map) {
+		if (map==null) return null;
+        List<Entry<K, V>> list = new ArrayList<>(map.entrySet());
+        list.sort(Entry.comparingByValue());
+
+        Map<K, V> result = new LinkedHashMap<>();
+        for (Entry<K, V> entry : list) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+        return result;
 	}
 }

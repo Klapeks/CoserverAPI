@@ -10,6 +10,20 @@ import java.util.Map;
 
 public class dCoserver {
 
+	public static Async<String> asyncSend(String cmd, boolean isLarge) {
+		return asyncSend(aConfig.bukkit.ip, aConfig.bukkit.port, cmd, isLarge);
+	}
+	public static Async<String> asyncSecuritySend(String cmd, boolean isLarge) {
+		return asyncSecuritySend(aConfig.bukkit.ip, aConfig.bukkit.port, cmd, isLarge);
+	}
+	public static Async<String> asyncSend(String cmd) {
+		return asyncSend(cmd, false);
+	}
+	public static Async<String> asyncSecuritySend(String cmd) {
+		return asyncSecuritySend(cmd, false);
+	}
+	
+
 	public static String send(String cmd, boolean isLarge) {
 		return send(aConfig.bukkit.ip, aConfig.bukkit.port, cmd, isLarge);
 	}
@@ -65,6 +79,13 @@ public class dCoserver {
 		if (ip$socket.containsKey(ip+"_"+port)) ip$socket.remove(ip+"_"+port).close();
 	}
 	
+
+	public static Async<String> asyncSend(String ip, int port, String msg, boolean isLarge) {
+		return new Async<>(() -> send(ip, port, msg, isLarge));
+	}
+	public static Async<String> asyncSecuritySend(String ip, int port, String cmd, boolean isLarge) {
+		return new Async<>(() -> securitySend(ip, port, cmd, isLarge));
+	}
 	
 	public static String send(String ip, int port, String msg, boolean isLarge) {
 		try {
