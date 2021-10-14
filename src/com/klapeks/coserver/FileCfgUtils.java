@@ -5,10 +5,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 
-import org.bukkit.configuration.file.FileConfiguration;
-
-import net.md_5.bungee.config.Configuration;
-
 public class FileCfgUtils {
 
 	public static FileWriter open(File file) {
@@ -29,15 +25,21 @@ public class FileCfgUtils {
 		}
 	}
 
-	public static <T> T g(FileConfiguration config, FileWriter fw,  String key, T defaultValue, String... comment) {
-		return g(new BukkitConfiguration(config), fw, key, defaultValue, comment);
+	public static <T> T g(org.bukkit.configuration.file.FileConfiguration config, FileWriter fw,  String key, T defaultValue, String... comment) {
+		return ga(new BukkitConfiguration(config), fw, key, defaultValue, comment);
 	}
-	public static <T> T g(Configuration config, FileWriter fw,  String key, T defaultValue, String... comment) {
-		return g(new BungeeConfiguration(config), fw, key, defaultValue, comment);
+	public static <T> T g(net.md_5.bungee.config.Configuration config, FileWriter fw,  String key, T defaultValue, String... comment) {
+		return ga(new BungeeConfiguration(config), fw, key, defaultValue, comment);
+	}
+	public static <T> T gb(org.bukkit.configuration.file.FileConfiguration config, FileWriter fw,  String key, T defaultValue, String... comment) {
+		return ga(new BukkitConfiguration(config), fw, key, defaultValue, comment);
+	}
+	public static <T> T gbg(net.md_5.bungee.config.Configuration config, FileWriter fw,  String key, T defaultValue, String... comment) {
+		return ga(new BungeeConfiguration(config), fw, key, defaultValue, comment);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> T g(ConfigurationAdapter ca, FileWriter fw, String key, T defaultValue, String... comment) {
+	public static <T> T ga(ConfigurationAdapter ca, FileWriter fw, String key, T defaultValue, String... comment) {
 		try {
 			if (!ca.contains(key)) {
 				fw.write("\n\n");
@@ -70,8 +72,8 @@ public class FileCfgUtils {
 	}
 
 	static class BungeeConfiguration implements ConfigurationAdapter {
-		Configuration c;
-		public BungeeConfiguration(Configuration config) {
+		net.md_5.bungee.config.Configuration c;
+		public BungeeConfiguration(net.md_5.bungee.config.Configuration config) {
 			c = config;
 		}
 		public boolean contains(String key) {
@@ -82,8 +84,8 @@ public class FileCfgUtils {
 		}
 	}
 	static class BukkitConfiguration implements ConfigurationAdapter {
-		FileConfiguration c;
-		public BukkitConfiguration(FileConfiguration config) {
+		org.bukkit.configuration.file.FileConfiguration c;
+		public BukkitConfiguration(org.bukkit.configuration.file.FileConfiguration config) {
 			c = config;
 		}
 		public boolean contains(String key) {
