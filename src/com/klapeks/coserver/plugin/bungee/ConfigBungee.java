@@ -1,11 +1,10 @@
 package com.klapeks.coserver.plugin.bungee;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.LinkedHashMap;
 
+import com.klapeks.coserver.FileCfgUtils;
 import com.klapeks.coserver.aConfig;
 import com.klapeks.coserver.dFunctions;
 import com.klapeks.coserver.dRSA;
@@ -56,24 +55,6 @@ public class ConfigBungee {
 			throw new RuntimeException(t);
 		}
 	}
-
-	private static FileWriter open(File file) {
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(file));
-			String e = "";
-			String s; while((s=br.readLine())!=null) {
-//				dFunctions.debug("§e---" + s);
-				e = e + s + "\n";
-			}
-			br.close();
-			FileWriter fw = new FileWriter(file);
-//			dFunctions.debug("§a Adding to filewriter;   §b" + e);
-			fw.write(e);
-			return fw;
-		} catch (Throwable t) {
-			throw new RuntimeException(t);
-		}
-	}
 	
 	private static int getBungeePort() {
 		try {
@@ -92,33 +73,14 @@ public class ConfigBungee {
 		else port=-1;
 		return port;
 	}
-	@SuppressWarnings("unchecked")
-	private static <T> T g(String key, T defaultValue, String... comment) {
-		try {
-			if (!config.contains(key)) {
-				fw.write("\n\n");
-				if (comment!=null) 
-					for (String s : comment) {
-						fw.write("# " + s + "\n");
-					}
-				if (defaultValue instanceof String) {
-					defaultValue = (T) ("\"" + defaultValue + "\"");
-				}
-				fw.write(key + ": " + defaultValue);
-				dFunctions.debug("§3Adding a §6" + defaultValue + "§3 in key §6" + key);
-				return defaultValue;
-			} else {
-				Object o = config.get(key);
-				try {
-					return (T) o;
-				} catch (Throwable t) {
-					return defaultValue;
-				}
-			}
-		} catch (Throwable e) {
-			throw new RuntimeException(e);
-		}
+
+	private static FileWriter open(File file) {
+		return FileCfgUtils.open(file);
 	}
+	private static <T> T g(String key, T defaultValue, String... comment) {
+		return FileCfgUtils.g(config, fw, key, defaultValue, comment);
+	}
+	
 //	private static void copyConfig(File to, Function<String, String> placeholders) {
 //		try {
 //			if (to.exists()) to.delete();
