@@ -6,10 +6,10 @@ import java.io.FileWriter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import com.klapeks.coserver.FileCfgUtils;
 import com.klapeks.coserver.aConfig;
 import com.klapeks.coserver.dFunctions;
-import com.klapeks.coserver.dRSA;
+import com.klapeks.funcs.FileCfgUtils;
+import com.klapeks.funcs.dRSA;
 
 public class ConfigBukkit {
 	

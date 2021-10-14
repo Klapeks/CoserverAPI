@@ -8,6 +8,9 @@ import java.security.PublicKey;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.klapeks.funcs.Async;
+import com.klapeks.funcs.dRSA;
+
 public class dCoserver {
 
 	public static Async<String> asyncSend(String cmd, boolean isLarge) {

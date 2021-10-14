@@ -7,6 +7,8 @@ import java.net.Socket;
 import java.security.KeyPair;
 import java.security.PublicKey;
 
+import com.klapeks.funcs.dRSA;
+
 public class dCoserverServer {
 	
 	protected ServerSocket serverSocket;

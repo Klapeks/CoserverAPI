@@ -4,10 +4,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.LinkedHashMap;
 
-import com.klapeks.coserver.FileCfgUtils;
 import com.klapeks.coserver.aConfig;
 import com.klapeks.coserver.dFunctions;
-import com.klapeks.coserver.dRSA;
+import com.klapeks.funcs.FileCfgUtils;
+import com.klapeks.funcs.dRSA;
 
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
