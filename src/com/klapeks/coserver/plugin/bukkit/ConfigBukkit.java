@@ -39,6 +39,7 @@ public class ConfigBukkit {
 			aConfig.rsaKeySize = g("rsaKeySize", 1024, "RSA key size");
 			aConfig.securityKey = g("securityKey", dRSA.generateSecretKey(10), "Security key to get a RSA public key from bungeecord", "(Needs to equals with bungeecord's config file)");
 			aConfig.useDebugMsg = g("useDebugMsg", false, "Is debug messages will shows in console");
+			aConfig.shutdownOnError = g("shutdownOnError", false, "If plugins that use CoserverAPI gets an error on startup, they will be able to shutdown server");
 			
 			fw.flush();
 			fw.close();

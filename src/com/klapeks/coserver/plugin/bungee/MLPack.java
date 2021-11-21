@@ -23,6 +23,10 @@ public class MLPack implements IMLPack<Plugin> {
 			public void scheduleAsync(Runnable r, int time) {
 				ProxyServer.getInstance().getScheduler().runAsync(bungee, r);
 			}
+			@Override
+			public void shutdown() {
+				ProxyServer.getInstance().stop();
+			}
 		});
 	}
 

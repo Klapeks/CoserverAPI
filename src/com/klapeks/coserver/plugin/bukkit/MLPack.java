@@ -25,6 +25,10 @@ public class MLPack implements IMLPack<JavaPlugin>{
 				public void scheduleAsync(Runnable r, int time) {
 					Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, r, time);
 				}
+				@Override
+				public void shutdown() {
+					Bukkit.shutdown();
+				}
 			});
 		} else {
 			dFunctions.setFunctions(new dFunctions.IdFunctions() {
@@ -40,6 +44,10 @@ public class MLPack implements IMLPack<JavaPlugin>{
 				@Override
 				public void scheduleAsync(Runnable r, int time) {
 					Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, r, time);
+				}
+				@Override
+				public void shutdown() {
+					Bukkit.shutdown();
 				}
 			});
 		}

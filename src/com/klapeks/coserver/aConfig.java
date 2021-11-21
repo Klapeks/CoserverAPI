@@ -10,6 +10,8 @@ public class aConfig {
 
 	public static boolean useSecurity = false;
 
+	public static boolean shutdownOnError = false;
+
 	public static class bukkit {
 		public static int port = -1;
 		public static String ip = "0.0.0.0";

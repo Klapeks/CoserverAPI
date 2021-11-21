@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.util.List;
 
 import com.klapeks.coserver.dFunctions;
 
@@ -51,10 +52,24 @@ public class FileCfgUtils {
 							fw.write("# " + _s + "\n");
 						}
 					}
-				if (defaultValue instanceof String) {
-					defaultValue = (T) ("\"" + defaultValue + "\"");
+				if (defaultValue instanceof String[]) {
+					String str = "";
+					for (String s : (String[]) defaultValue) {
+						str += "\n- \"" + s + "\"";
+					}
+					fw.write(key + ": " + str);
+				} else if (defaultValue instanceof List<?>) {
+					String str = "";
+					for (Object s : (List<?>) defaultValue) {
+						if (s instanceof String) str += "\n- \"" + s + "\"";
+						else str += "\n- " + s;
+					}
+					fw.write(key + ": " + str);
+				} else if (defaultValue instanceof String) {
+					fw.write(key + ": " + "\"" + defaultValue + "\"");
+				} else {
+					fw.write(key + ": " + defaultValue);
 				}
-				fw.write(key + ": " + defaultValue);
 				dFunctions.debug("§3Adding a §6" + defaultValue + "§3 in key §6" + key);
 				return defaultValue;
 			} else {

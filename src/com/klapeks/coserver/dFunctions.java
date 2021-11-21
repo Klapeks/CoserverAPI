@@ -6,6 +6,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.bukkit.Bukkit;
+
 import java.util.Random;
 
 public class dFunctions {
@@ -27,15 +30,23 @@ public class dFunctions {
 		public void scheduleAsync(Runnable r, int time) {
 			r.run();
 		}
+		@Override
+		public void shutdown() {
+			System.err.println("Shutdown methot is not found :(");
+		}
 	};
 	public interface IdFunctions {
 		void log(Object obj);
 		default String logPrefix() {return "";}
 		void scheduleAsync(Runnable r, int time);
+		void shutdown();
 	}
 	
 	
-	
+
+	public static void shutdown() {
+		t.shutdown();
+	}
 
 	public static void log(Object obj) {
 		log_(t.logPrefix() + obj);
@@ -137,5 +148,13 @@ public class dFunctions {
             result.put(entry.getKey(), entry.getValue());
         }
         return result;
+	}
+
+	public static List<String> massiveToArray(String[] strings) {
+		ArrayList<String> list = new ArrayList<>();
+		for (String s : strings) {
+			list.add(s);
+		}
+		return list;
 	}
 }
