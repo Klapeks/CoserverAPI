@@ -7,6 +7,8 @@ import java.net.Socket;
 import java.security.KeyPair;
 import java.security.PublicKey;
 
+import javax.crypto.BadPaddingException;
+
 import com.klapeks.funcs.dRSA;
 
 public class dCoserverServer {
@@ -77,8 +79,11 @@ public class dCoserverServer {
 				request = request.replaceFirst("enc/", "");
 				PublicKey pk = dRSA.toPublicKey(request.split("/dec/")[0]);
 				request = request.substring(request.split("/dec/")[0].length()+"/dec/".length());
-				request = dRSA.rsaDecrypt(request, hs.keyPair.getPrivate());
-				
+				try {
+					request = dRSA.rsaDecrypt(request, hs.keyPair.getPrivate());
+				} catch (Throwable t) {
+					return null;
+				}
 				return dRSA.rsaEncrypt(hs.securityHandle(s, request), pk);
 			}
 			
