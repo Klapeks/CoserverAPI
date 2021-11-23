@@ -82,7 +82,11 @@ public class dCoserverServer {
 				try {
 					request = dRSA.rsaDecrypt(request, hs.keyPair.getPrivate());
 				} catch (Throwable t) {
-					return null;
+					if (aConfig.useDebugMsg) {
+						t.printStackTrace();
+						dFunctions.debug("§cErrored request -> errored response");
+					}
+					return "someerror";
 				}
 				return dRSA.rsaEncrypt(hs.securityHandle(s, request), pk);
 			}

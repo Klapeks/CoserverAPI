@@ -137,7 +137,8 @@ public class dCoserver {
 		}
 		String r = send(ip, port, "enc/"+dRSA.fromKey(keyPair.getPublic())+"/dec/"+dRSA.rsaEncrypt(cmd, ip$password.get(ip+"_"+port)), isLarge);
 		if (r!=null && r.equals("Errors 400/401/403/405/417/501/503 (go away lmao)")) {
-			ip$password.clear();
+			ip$password.remove(ip+"_"+port);
+			dFunctions.debug("§cerrored response -> try again");
 			return securitySend(ip, port, cmd, isLarge);
 		}
 		return dRSA.rsaDecrypt(r, keyPair.getPrivate());
