@@ -39,6 +39,12 @@ public class MLPack implements IMLPack<Plugin> {
 	
 	public void enable(Plugin bungee) {
 		dFunctions.log("§aCoserverAPI is enabling");
+		if (aConfig.bungee.strongDebug) {
+			if (aConfig.useSecurity) {
+				SuperCoServer.BungeeCoserv.addSecurityHandler("coservertestbtchecker", (msg) -> "all is good");
+			}
+			else SuperCoServer.BungeeCoserv.addHandler("coservertestbtchecker", (msg) -> "all is good");
+		}
 	}
 
 	public void disable(Plugin bungee) {

@@ -52,6 +52,9 @@ public class dFunctions {
 	public static void debug(Object obj) {
 		if (aConfig.useDebugMsg) log_("§6{DEBUG}§r: " + obj);
 	}
+	public static void strong_debug(Object obj) {
+		if (aConfig.useDebugMsg && aConfig.bungee.strongDebug) log_("§c{S_DEBUG}§r: " + obj);
+	}
 	public static void log_(Object obj) {
 		t.log(obj);
 	}

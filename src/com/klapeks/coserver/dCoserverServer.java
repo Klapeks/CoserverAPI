@@ -28,7 +28,9 @@ public class dCoserverServer {
 					onEnable();
 					while (!disabled) {
 						try {
+							dFunctions.strong_debug("Waiting for connection");
 							Socket s = serverSocket.accept();
+							dFunctions.strong_debug("Some socket was connected");
 							new Thread(new SocketProcessor(dCoserverServer.this, s)).start();
 //							new SocketProcessor(s).run();
 						} catch(Throwable th) {
@@ -97,8 +99,12 @@ public class dCoserverServer {
 					return dRSA.fromKey(hs.keyPair.getPublic());
 				}
 			}
-			
-			return hs.handle(s, request);
+			try {
+				return hs.handle(s, request);
+			} catch (Throwable t) {
+				t.printStackTrace();
+				return null;
+			}
 		}
 		@Override
 		public void run() {
@@ -108,11 +114,13 @@ public class dCoserverServer {
 				boolean isLarge = false;
 				
 				String request = din.readUTF();
+				dFunctions.strong_debug("Request was sended from " + s.getInetAddress() + ": " + request);
 				if (request.startsWith("[Large]")) {
 					request = request.substring("[Large]".length());
 					isLarge = true;
 				}
 				String response = handleRequest(s, request);
+				dFunctions.strong_debug("Response: " + response);
 				if (response == null) response = "404error";
 				if (response.equals("someerror")) response = "Errors 400/401/403/405/417/501/503 (go away lmao)";
 				dout.writeUTF(response);
@@ -134,6 +142,7 @@ public class dCoserverServer {
 						dout.flush();
 					}
 				}
+				dFunctions.strong_debug("Closing...");
 				dout.close();
 				din.close();
 				s.close();

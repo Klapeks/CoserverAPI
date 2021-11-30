@@ -5,9 +5,9 @@ public class aConfig {
 	public static String securityKey = "SomeTestSecurityKey";
 	
 	public static int rsaKeySize = 1024;
-	
-	public static boolean useDebugMsg = false;
 
+	public static boolean useDebugMsg = false;
+	
 	public static boolean useSecurity = false;
 
 	public static boolean shutdownOnError = false;
@@ -17,6 +17,7 @@ public class aConfig {
 		public static String ip = "0.0.0.0";
 	}
 	public static class bungee {
+		public static boolean strongDebug = false;
 		public static int port = -1;
 	}
 	

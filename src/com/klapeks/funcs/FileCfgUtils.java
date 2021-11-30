@@ -45,6 +45,7 @@ public class FileCfgUtils {
 	public static <T> T ga(ConfigurationAdapter ca, FileWriter fw, String key, T defaultValue, String... comment) {
 		try {
 			if (!ca.contains(key)) {
+				if (defaultValue instanceof String && defaultValue.equals("")) return (T) "";
 				fw.write("\n\n");
 				if (comment!=null)
 					for (String s : comment) {
@@ -75,7 +76,8 @@ public class FileCfgUtils {
 			} else {
 				Object o = ca.get(key);
 				try {
-					return (T) o;
+					if (defaultValue instanceof String) return (T) (o+"");
+					else return (T) o;
 				} catch (Throwable t) {
 					return defaultValue;
 				}

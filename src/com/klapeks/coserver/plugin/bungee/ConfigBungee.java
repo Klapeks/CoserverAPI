@@ -41,6 +41,7 @@ public class ConfigBungee {
 			aConfig.rsaKeySize = g("rsaKeySize", 1024, "RSA key size");
 			aConfig.securityKey = g("securityKey", dRSA.generateSecretKey(10), "Security key to send to bukkit a RSA public key", "(Needs to equals with bukkit's config file)");
 			aConfig.useDebugMsg = g("useDebugMsg", false, "Is debug messages will shows in console");
+			aConfig.bungee.strongDebug = g("STRONG_DEBUG", "", "Is debug messages will shows in console").equals("true");
 			
 			fw.flush();
 			fw.close();
