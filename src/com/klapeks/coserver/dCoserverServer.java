@@ -6,6 +6,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.KeyPair;
 import java.security.PublicKey;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.crypto.BadPaddingException;
 
@@ -106,6 +108,26 @@ public class dCoserverServer {
 				return null;
 			}
 		}
+		static void largeResponse(DataOutputStream dout, String response) {
+			final int sepr = 64000;
+			String nr = "";
+			List<String> list = new ArrayList<String>();
+			while (response.length() > sepr) {
+				nr = response.substring(0, sepr);
+				response = response.substring(sepr);
+				list.add(nr);
+			}
+			list.add(response);
+			try {
+				dout.writeUTF("[Large]Willbe:"+list.size());
+				for (String s : list) {
+					dout.writeUTF(s);
+				}
+				dout.flush();
+			} catch (Throwable t) {
+				throw new RuntimeException(t);
+			}
+		}
 		@Override
 		public void run() {
 			try {
@@ -123,8 +145,12 @@ public class dCoserverServer {
 				dFunctions.strong_debug("Response: " + response);
 				if (response == null) response = "404error";
 				if (response.equals("someerror")) response = "Errors 400/401/403/405/417/501/503 (go away lmao)";
-				dout.writeUTF(response);
-				dout.flush();
+				if (response.length() >= 64000) {
+					largeResponse(dout, response);
+				} else {
+					dout.writeUTF(response);
+					dout.flush();
+				}
 				
 				if (isLarge) {
 					while(true) {
@@ -138,8 +164,12 @@ public class dCoserverServer {
 						response = handleRequest(s, request);
 						if (response == null) response = "404error";
 						if (response.equals("someerror")) response = "Errors 400/401/403/405/417/501/503 (go away lmao)";
-						dout.writeUTF(response);
-						dout.flush();
+						if (response.length() >= 64000) {
+							largeResponse(dout, response);
+						} else {
+							dout.writeUTF(response);
+							dout.flush();
+						}
 					}
 				}
 				dFunctions.strong_debug("Closing...");

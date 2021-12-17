@@ -39,6 +39,9 @@ public class dCoserver {
 	public static String securitySend(String cmd) {
 		return securitySend(cmd, false);
 	}
+	public static void closeLarge() {
+		closeLarge(aConfig.bukkit.ip, aConfig.bukkit.port);
+	}
 	
 	private static class dCos {
 		public Socket socket;
@@ -59,6 +62,13 @@ public class dCoserver {
 				dout.flush();
 				String response = din.readUTF(); // Get response from server
 				if (response==null||response.equals("404error")) return null;
+				if (response.startsWith("[Large]Willbe:")) {
+					int size = Integer.parseInt(response.split(":")[1]);
+					response = "";
+					for (int i = 0; i < size; i++) {
+						response += din.readUTF();
+					}
+				}
 				return response;
 			} catch (Throwable e) {
 				throw new RuntimeException(e);
@@ -112,6 +122,13 @@ public class dCoserver {
 			dout.writeUTF(cmd); // Send command to server
 			dout.flush();
 			String response = din.readUTF(); // Get response from server
+			if (response!=null && response.startsWith("[Large]Willbe:")) {
+				int size = Integer.parseInt(response.split(":")[1]);
+				response = "";
+				for (int i = 0; i < size; i++) {
+					response += din.readUTF();
+				}
+			}
 			dout.close();
 			s.close();
 			if (response==null||response.equals("404error")) return null;
