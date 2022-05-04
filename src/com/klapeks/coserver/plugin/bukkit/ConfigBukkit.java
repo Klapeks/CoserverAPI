@@ -58,7 +58,7 @@ public class ConfigBukkit {
 		return FileCfgUtils.open(file);
 	}
 	private static <T> T g(String key, T defaultValue, String... comment) {
-		return FileCfgUtils.g(config, fw, key, defaultValue, comment);
+		return FileCfgUtils.get_bk(config, fw, key, defaultValue, comment);
 	}
 //	private static void copyConfig(File to, Function<String, String> placeholders) {
 //		try {

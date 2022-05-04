@@ -28,18 +28,21 @@ public class FileCfgUtils {
 		}
 	}
 
-	public static <T> T g(org.bukkit.configuration.file.FileConfiguration config, FileWriter fw,  String key, T defaultValue, String... comment) {
+	public static <T> T get_bk(org.bukkit.configuration.file.FileConfiguration config, FileWriter fw,  String key, T defaultValue, String... comment) {
 		return ga(new BukkitConfiguration(config), fw, key, defaultValue, comment);
 	}
-	public static <T> T g(net.md_5.bungee.config.Configuration config, FileWriter fw,  String key, T defaultValue, String... comment) {
+//	public static <T> T gb(org.bukkit.configuration.file.FileConfiguration config, FileWriter fw,  String key, T defaultValue, String... comment) {
+//		return ga(new BukkitConfiguration(config), fw, key, defaultValue, comment);
+//	}
+	public static <T> T get_bg(net.md_5.bungee.config.Configuration config, FileWriter fw,  String key, T defaultValue, String... comment) {
 		return ga(new BungeeConfiguration(config), fw, key, defaultValue, comment);
 	}
-	public static <T> T gb(org.bukkit.configuration.file.FileConfiguration config, FileWriter fw,  String key, T defaultValue, String... comment) {
-		return ga(new BukkitConfiguration(config), fw, key, defaultValue, comment);
+	public static <T> T get_ey(EasyYaml config, FileWriter fw,  String key, T defaultValue, String... comment) {
+		return ga(config, fw, key, defaultValue, comment);
 	}
-	public static <T> T gbg(net.md_5.bungee.config.Configuration config, FileWriter fw,  String key, T defaultValue, String... comment) {
-		return ga(new BungeeConfiguration(config), fw, key, defaultValue, comment);
-	}
+//	public static <T> T gbg(net.md_5.bungee.config.Configuration config, FileWriter fw,  String key, T defaultValue, String... comment) {
+//		return ga(new BungeeConfiguration(config), fw, key, defaultValue, comment);
+//	}
 	
 	@SuppressWarnings("unchecked")
 	public static <T> T ga(ConfigurationAdapter ca, FileWriter fw, String key, T defaultValue, String... comment) {

@@ -25,7 +25,7 @@ public class dFunctions {
 		}
 
 		@Override
-		public void scheduleAsync(Runnable r, int time) {
+		public void scheduleAsync(Runnable r) {
 			r.run();
 		}
 		@Override
@@ -36,7 +36,7 @@ public class dFunctions {
 	public interface IdFunctions {
 		void log(Object obj);
 		default String logPrefix() {return "";}
-		void scheduleAsync(Runnable r, int time);
+		void scheduleAsync(Runnable r);
 		void shutdown();
 	}
 	
@@ -58,8 +58,8 @@ public class dFunctions {
 	public static void log_(Object obj) {
 		t.log(obj);
 	}
-	public static void scheduleAsync(Runnable r, int time) {
-		t.scheduleAsync(r, time);
+	public static void scheduleAsync(Runnable r) {
+		t.scheduleAsync(r);
 	}
 	
 

@@ -15,9 +15,12 @@ public class SuperCoServer extends dCoserverServer{
 	
 	private HashMap<String, Function<String, String>> handlers = new HashMap<>();
 	private HashMap<String, Function<String, String>> securityHandlers = new HashMap<>();
+	private HashMap<String, Function<String, String>> networkHandlers = new HashMap<>();
 	
 	private HashMap<String, BiFunction<Socket, String, String>> bi_handlers = new HashMap<>();
 	private HashMap<String, BiFunction<Socket, String, String>> bi_securityHandlers = new HashMap<>();
+	private HashMap<String, BiFunction<Socket, String, String>> bi_networkHandlers = new HashMap<>();
+	
 	/**
 	 * @param command
 	 * @param func - request -> {return "response";}
@@ -36,6 +39,13 @@ public class SuperCoServer extends dCoserverServer{
 	 * @param command
 	 * @param func - request -> {return "response";}
 	 */
+	public void addNetworkHandler(String command, Function<String, String> func) {
+		networkHandlers.put(command, func);
+	}
+	/**
+	 * @param command
+	 * @param func - request -> {return "response";}
+	 */
 	public void addSocketHandler(String command, BiFunction<Socket, String, String> func) {
 		bi_handlers.put(command, func);
 	}
@@ -45,6 +55,13 @@ public class SuperCoServer extends dCoserverServer{
 	 */
 	public void addSocketSecurityHandler(String command, BiFunction<Socket, String, String> func) {
 		bi_securityHandlers.put(command, func);
+	}
+	/**
+	 * @param command
+	 * @param func - request -> {return "response";}
+	 */
+	public void addNetworkSecurityHandler(String command, BiFunction<Socket, String, String> func) {
+		bi_networkHandlers.put(command, func);
 	}
 	
 	public SuperCoServer(int port) {
@@ -82,6 +99,22 @@ public class SuperCoServer extends dCoserverServer{
 			return securityHandlers.get(cmd).apply(request.replaceFirst(cmd+" ", ""));
 		}
 		return super.securityHandle(request);
+	}
+	@Override
+	public String networkHandle(Socket socket, String request) {
+		String cmd = request.split(" ")[0];
+		if (bi_networkHandlers.containsKey(cmd)) {
+			return bi_networkHandlers.get(cmd).apply(socket, request.replaceFirst(cmd+" ", ""));
+		}
+		return super.networkHandle(socket, request);
+	}
+	@Override
+	public String networkHandle(String request) {
+		String cmd = request.split(" ")[0];
+		if (networkHandlers.containsKey(cmd)) {
+			return networkHandlers.get(cmd).apply(request.replaceFirst(cmd+" ", ""));
+		}
+		return super.networkHandle(request);
 	}
 	
 	@Override

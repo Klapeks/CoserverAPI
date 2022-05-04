@@ -5,22 +5,25 @@ import java.util.function.Supplier;
 
 public class Async<T> {
 
-	Supplier<T> task;
 	Consumer<T> then = null;
 	public Async(Supplier<T> task) {
-		this.task = task;
 		new Thread(() -> {
-			T r = task.get();
-			setResult(r);
+			setResult(task.get());
 		}).start();
 	}
 	
 	public void then(Consumer<T> then) {
+		if (resulted) {
+			then.accept(_result);
+			return;
+		}
 		this.then = then;
 	}
-	
+
+	boolean resulted;
 	private T _result = null;
 	private void setResult(T result) {
+		resulted = true;
 		_result = result;
 		if (then != null) {
 			then.accept(_result);
@@ -28,7 +31,7 @@ public class Async<T> {
 	}
 	
 	public T await() {
-		while(_result==null) {
+		while(!resulted) {
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {}

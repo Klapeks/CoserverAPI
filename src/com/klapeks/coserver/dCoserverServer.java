@@ -9,19 +9,23 @@ import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.crypto.BadPaddingException;
-
+import com.klapeks.funcs.IntPair;
+import com.klapeks.funcs.NetConverter;
 import com.klapeks.funcs.dRSA;
 
 public class dCoserverServer {
+	public static dCoserverServer serv;
 	
 	protected ServerSocket serverSocket;
 	public final int port;
 	private KeyPair keyPair;
+	private IntPair netPair;
 	boolean disabled = false;
 	public dCoserverServer(int port) {
+		serv = this;
 		this.port = port;
 		keyPair = dRSA.generateKeyPair(aConfig.rsaKeySize);
+		netPair = new IntPair((int) (System.currentTimeMillis()%1000000), 144);
 		new Thread() {
 			@Override
 			public void run() {
@@ -62,11 +66,17 @@ public class dCoserverServer {
 	public String securityHandle(Socket socket, String request) {
 		return securityHandle(request);
 	}
+	public String networkHandle(Socket socket, String request) {
+		return networkHandle(request);
+	}
 	
 	public String handle(String request) {
 		return "null";
 	}
 	public String securityHandle(String request) {
+		return "null";
+	}
+	public String networkHandle(String request) {
 		return "null";
 	}
 	
@@ -79,7 +89,7 @@ public class dCoserverServer {
 			this.hs = hs;
 		}
 		private String handleRequest(Socket s, String request) {
-			if (request.startsWith("enc/") || request.contains("/dec/")) {
+			if (request.startsWith("enc/") && request.contains("/dec/")) {
 				request = request.replaceFirst("enc/", "");
 				PublicKey pk = dRSA.toPublicKey(request.split("/dec/")[0]);
 				request = request.substring(request.split("/dec/")[0].length()+"/dec/".length());
@@ -94,11 +104,30 @@ public class dCoserverServer {
 				}
 				return dRSA.rsaEncrypt(hs.securityHandle(s, request), pk);
 			}
+			if (request.startsWith("net/") && request.contains("/dec/")) {
+				request = request.replaceFirst("net/", "");
+				IntPair nk;
+				try {
+					nk = IntPair.from(request.split("/dec/")[0]);
+					request = request.substring(request.split("/dec/")[0].length()+"/dec/".length());
+					request = NetConverter.decode(request, hs.netPair.get1(), hs.netPair.get2());
+				} catch (Throwable t) {
+					if (aConfig.useDebugMsg) {
+						t.printStackTrace();
+						dFunctions.debug("§cErrored net request -> errored net response");
+					}
+					return "someerror";
+				}
+				return NetConverter.encode(hs.networkHandle(s, request), nk.get1(), nk.get2());
+			}
 			
-			else if (request.startsWith(aConfig.securityKey+dCoserver.securitySplitor)) {
-				request = request.substring(request.split(dCoserver.securitySplitor)[0].length()+dCoserver.securitySplitor.length());
+			else if (request.startsWith(aConfig.securityKey+Coserver.securitySplitor)) {
+				request = request.substring(request.split(Coserver.securitySplitor)[0].length()+Coserver.securitySplitor.length());
 				if (request.startsWith("givemepswpls")) {
 					return dRSA.fromKey(hs.keyPair.getPublic());
+				}
+				if (request.startsWith("givemenetpswpls")) {
+					return hs.netPair.toString();
 				}
 			}
 			try {
@@ -134,7 +163,6 @@ public class dCoserverServer {
 				DataInputStream din = new DataInputStream(s.getInputStream());
 				DataOutputStream dout = new DataOutputStream(s.getOutputStream());
 				boolean isLarge = false;
-				
 				String request = din.readUTF();
 				dFunctions.strong_debug("Request was sended from " + s.getInetAddress() + ": " + request);
 				if (request.startsWith("[Large]")) {
