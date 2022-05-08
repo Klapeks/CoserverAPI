@@ -69,6 +69,7 @@ public class dCoserverServer {
 	public String networkHandle(Socket socket, String request) {
 		return networkHandle(request);
 	}
+	public void onLargeClose(Socket socket) {}
 	
 	public String handle(String request) {
 		return "null";
@@ -79,6 +80,7 @@ public class dCoserverServer {
 	public String networkHandle(String request) {
 		return "null";
 	}
+	public boolean handleError(Socket s, Exception e) {return false;}
 	
 //	private static Map<String, PublicKey> ip$password = new HashMap<>();
 	private static class SocketProcessor implements Runnable {
@@ -187,6 +189,7 @@ public class dCoserverServer {
 						if (request.equals("CloseConnection")) {
 							dout.writeUTF("ty :3");
 							dout.flush();
+							hs.onLargeClose(s);
 							break;
 						}
 						response = handleRequest(s, request);
@@ -204,8 +207,9 @@ public class dCoserverServer {
 				dout.close();
 				din.close();
 				s.close();
-			} catch (Throwable e) {
-				throw new RuntimeException(e);
+			} catch (Exception e) {
+				if (hs.handleError(s, e)) return;
+				if (aConfig.useDebugMsg) e.printStackTrace();
 			}
 		}
 	}

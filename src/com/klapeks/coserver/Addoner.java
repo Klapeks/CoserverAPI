@@ -11,7 +11,7 @@ public class Addoner {
 		all.addIn(message, func);
 	}
 	
-	public static Object[] run(String message, Object[] args) {
+	public static Object[] run(String message, Object... args) {
 		if (!all.containsKey(message)) return null;
 		Object[] o = null;
 		for (Function<Object[], Object[]> func : all.get(message)) {

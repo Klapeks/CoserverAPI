@@ -23,12 +23,17 @@ public class Coserver {
 			Coserver cs = css.remove(0);
 			if (cs.isFree()) return cs;
 		}
-		Coserver cs = newCordServer();
+		Coserver cs = newCordServer(true);
 		cs.open();
 		return cs;
 	}
-	public static Coserver newCordServer() {
-		return new Coserver(aConfig.bukkit.ip, aConfig.bukkit.port);
+//	public static Coserver newCordServer() {
+//		return newCordServer(true);
+//	}
+	public static Coserver newCordServer(boolean isAuto) {
+		Coserver cs = new Coserver(aConfig.bukkit.ip, aConfig.bukkit.port);
+		if (isAuto) allCoservers.add(cs);
+		return cs;
 	}
 	
 	private static long initTime = System.currentTimeMillis();
@@ -58,7 +63,6 @@ public class Coserver {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		allCoservers.add(this);
 	}
 
 	public Async<String> asyncSend(String msg) {
@@ -102,7 +106,9 @@ public class Coserver {
 
 	public void close() {
 		dFunctions.debug("Closing socket " + ip + ":" + port);
-		send("CloseConnection");
+		try {
+			send("CloseConnection");
+		} catch (Throwable t) {}
 		try {
 			if (socket!=null) socket.close();
 			if (din!=null) din.close();
@@ -118,7 +124,7 @@ public class Coserver {
 	private String send_raw(String cmd) {
 		synchronized (isFree) {
 			lastUse = time();
-			isFree = true;
+			isFree = false;
 			try {
 				boolean single = dout==null;
 				if (single) open();
@@ -138,7 +144,7 @@ public class Coserver {
 			} catch (Throwable e) {
 				throw new RuntimeException(e);
 			} finally {
-				isFree = false;
+				isFree = true;
 			}
 		}
 	}
@@ -149,8 +155,8 @@ public class Coserver {
 	}
 	public static void every5MinutesCheck() {
 		List<Coserver> css = new ArrayList<>(allCoservers);
-		while(!css.isEmpty()) {
-			Coserver cs = css.remove(0);
+		while(css.size()>1) {
+			Coserver cs = css.remove(1);
 			if (cs.isFree() && time() - cs.lastUse >= 60) {
 				cs.close();
 			}
